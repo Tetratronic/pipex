@@ -16,16 +16,34 @@ void	send_child(t_vars vars, char *cmd, char **params, char **env)
 {
 	if (fork() == 0)
 	{
-		if (dup2(vars.curr_in, STDIN_FILENO) < 0
-			|| dup2(vars.curr_out, STDOUT_FILENO) < 0)
+		if ((!cmd || !params))
+		{
+			if (vars.curr_out == vars.outfile)
+			{
+				perror("cmd");
+				exit(127);
+			}
+			exit(1);
+		}
+		if (dup2(vars.curr_in, STDIN_FILENO) < 0 || dup2(vars.curr_out, STDOUT_FILENO) < 0)
 			perror("dup2");
 		close_fds(vars.pipe[0], vars.pipe[1], vars.infile, vars.outfile);
 		execve(cmd, params, env);
-		perror("execve");
 		if (vars.curr_out == vars.outfile)
+		{
+			perror("execve");
 			exit(127);
+		}
 	}
-	exit(1);
+}
+
+void	enough_args(int argc)
+{
+	if (argc != 5)
+	{
+		ft_putendl_fd("Not Enough Arguments", 2);
+		exit(EXIT_FAILURE);
+	}
 }
 
 int	main(int argc, char **argv, char **env)
@@ -35,12 +53,8 @@ int	main(int argc, char **argv, char **env)
 	char	**params;
 	int		i;
 	int		j;
-
-	if (argc != 5)
-	{
-		ft_putendl_fd("Not Enough Arguments", 2);
-		exit(EXIT_FAILURE);
-	}
+	
+	enough_args(argc);
 	initialize_io(argv, &vars);
 	init_pipe(vars.pipe);
 	i = -1;
@@ -50,11 +64,6 @@ int	main(int argc, char **argv, char **env)
 	{
 		cmd = abs_path(argv[2 + i]);
 		params = ft_split(argv[2 + i], ' ');
-		if (!cmd || !params)
-		{
-			perror("alloc problem");
-			exit(127);
-		}
 		send_child(vars, cmd, params, env);
 		free(cmd);
 		j = 0;
@@ -65,7 +74,7 @@ int	main(int argc, char **argv, char **env)
 		vars.curr_out = vars.outfile;
 	}
 	close_fds(vars.pipe[0], vars.pipe[1], vars.infile, vars.outfile);
-	wait(NULL);
-	wait(NULL);
+	while(wait(NULL) >= 0)
+		;
 	return (0);
 }
