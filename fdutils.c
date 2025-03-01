@@ -62,6 +62,10 @@ char	*fetch_path(char *cmd, char **env)
 		}
 		free(fullcmd);
 	}
+	i = 0;
+	while(possible_paths[i])
+		free(possible_paths[i++]);
+	free(possible_paths);
 	return (NULL);
 }
 
@@ -69,6 +73,7 @@ char	*abs_path(char *arg, char **env)
 {
 	char	**cmd;
 	char	*name;
+	char	*fullname;
 	int		j;
 
 	cmd = ft_split(arg, ' ');
@@ -83,7 +88,11 @@ char	*abs_path(char *arg, char **env)
 	if (!name)
 		return (NULL);
 	if (!ft_strchr(name, '/'))
-		return(fetch_path(name, env));
+	{
+		fullname = fetch_path(name, env);
+		free(name);
+		return (fullname);
+	}
 	if (access(name, X_OK) == 0)
 		return (name);
 	return (NULL);
