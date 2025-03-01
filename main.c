@@ -62,7 +62,7 @@ int	main(int argc, char **argv, char **env)
 	vars.curr_out = vars.pipe[1];
 	while (++i < 2)
 	{
-		cmd = abs_path(argv[2 + i]);
+		cmd = abs_path(argv[2 + i], env);
 		params = ft_split(argv[2 + i], ' ');
 		send_child(vars, cmd, params, env);
 		free(cmd);

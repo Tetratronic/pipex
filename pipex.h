@@ -30,6 +30,6 @@ typedef struct s_vars {
 int		initialize_io(char **argv, t_vars *vars);
 void	init_pipe(int *pipe);
 void	close_fds(int fd1, int fd2, int fd3, int fd4);
-char	*abs_path(char *arg);
+char	*abs_path(char *arg, char **env);
 
 #endif

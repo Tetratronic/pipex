@@ -32,18 +32,17 @@ void	close_fds(int fd1, int fd2, int fd3, int fd4)
 
 char	*fetch_path(char *cmd, char **env)
 {
-	char	**possible_paths;
-	int		i;
-	char	*envpath;
-	char	*temp;
+	static char	**possible_paths;
+	int			i;
+	char		*fullcmd;
+	char		*temp;
 
 	i = -1;
 	while(env[++i])
 	{
 		if(ft_strncmp(env[i], "PATH=", 5) == 0)
 		{
-			envpath = &(*(env[i])) + 5;
-			possible_paths = ft_split(envpath, ':');
+			possible_paths = ft_split((&(*(env[i])) + 5), ':');
 			break;
 		}
 	}
@@ -51,7 +50,17 @@ char	*fetch_path(char *cmd, char **env)
 	while (possible_paths[++i])
 	{
 		temp = ft_strjoin(possible_paths[i], "/");
-
+		fullcmd = ft_strjoin(temp, cmd);
+		free(temp);
+		if (access(fullcmd, X_OK) == 0)
+		{
+			i = 0;
+			while(possible_paths[i])
+				free(possible_paths[i++]);
+			free(possible_paths);
+			return (fullcmd);
+		}
+		free(fullcmd);
 	}
 	return (NULL);
 }
@@ -66,14 +75,14 @@ char	*abs_path(char *arg, char **env)
 	if (!cmd)
 		exit(-1);
 	name = ft_strdup(cmd[0]);
-		j = 0;
+	j = 0;
 	while (cmd[j])
 		free(cmd[j++]);
 	free(cmd);
 	cmd = NULL;
 	if (!name)
 		return (NULL);
-	if (!ft_strchr(name, '/'));
+	if (!ft_strchr(name, '/'))
 		return(fetch_path(name, env));
 	if (access(name, X_OK) == 0)
 		return (name);
