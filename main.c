@@ -16,24 +16,13 @@ void	send_child(t_vars vars, char *cmd, char **params, char **env)
 {
 	if (fork() == 0)
 	{
-		if ((!cmd || !params))
-		{
-			if (vars.curr_out == vars.outfile)
-			{
-				perror("cmd");
-				exit(127);
-			}
-			exit(1);
-		}
 		if (dup2(vars.curr_in, STDIN_FILENO) < 0 || dup2(vars.curr_out, STDOUT_FILENO) < 0)
 			perror("dup2");
 		close_fds(vars.pipe[0], vars.pipe[1], vars.infile, vars.outfile);
 		execve(cmd, params, env);
+		perror("execve");
 		if (vars.curr_out == vars.outfile)
-		{
-			perror("execve");
 			exit(127);
-		}
 	}
 }
 
@@ -52,7 +41,6 @@ int	main(int argc, char **argv, char **env)
 	char	*cmd;
 	char	**params;
 	int		i;
-	int		j;
 	
 	enough_args(argc);
 	initialize_io(argv, &vars);
@@ -66,10 +54,6 @@ int	main(int argc, char **argv, char **env)
 		params = ft_split(argv[2 + i], ' ');
 		send_child(vars, cmd, params, env);
 		free(cmd);
-		j = 0;
-		while (params[j])
-			free(params[j++]);
-		free(params);
 		vars.curr_in = vars.pipe[0];
 		vars.curr_out = vars.outfile;
 	}

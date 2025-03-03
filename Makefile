@@ -5,7 +5,7 @@ LIBFTDIR = ./libft
 LIBFT = $(LIBFTDIR)/libft.a
 CC = cc
 HEADERS = pipex.h
-CFLAGS = -Wall -Wextra -Werror 
+CFLAGS = -Wall -Wextra -Werror -g 
 
 all: $(NAME)
 
