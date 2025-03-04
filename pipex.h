@@ -14,10 +14,12 @@
 # define PIPEX_H
 # include <stdio.h>
 # include <stdlib.h>
+# define malloc(x) (NULL)
 # include <sys/wait.h>
 # include <unistd.h>
 # include "libft/libft.h"
 # include <fcntl.h>
+# include <string.h>
 
 typedef struct s_vars {
 	int	pipe[2];
@@ -27,7 +29,7 @@ typedef struct s_vars {
 	int	outfile;
 }			t_vars;
 
-int		initialize_io(char **argv, t_vars *vars);
+void		initialize_io(char **argv, t_vars *vars);
 void	init_pipe(int *pipe);
 void	close_fds(int fd1, int fd2, int fd3, int fd4);
 char	*abs_path(char *arg, char **env);
