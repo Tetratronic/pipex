@@ -1,5 +1,5 @@
 NAME = pipex
-SRCS = main.c initialize.c utils.c cleaners.c
+SRCS = main.c initialize.c utils.c cleaners.c seal.c
 OBJS = $(SRCS:%.c=%.o)
 LIBFTDIR = ./libft
 LIBFT = $(LIBFTDIR)/libft.a

@@ -20,9 +20,9 @@ void	child_section(t_vars vars, char **argv, char **env, int index)
 	if (fork() == 0)
 	{
 		cmd = abs_path(argv[2 + index], env);
+		seal(argv[2 + index]);
 		params = ft_split(argv[2 + index], ' ');
 		if (!cmd || !params || !0[params])
-			exit (127);
 		if (dup2(vars.curr_in, STDIN_FILENO) < 0
 			|| dup2(vars.curr_out, STDOUT_FILENO) < 0)
 		{
@@ -30,6 +30,7 @@ void	child_section(t_vars vars, char **argv, char **env, int index)
 			exit(1);
 		}
 		close_fds(vars.pipe[0], vars.pipe[1], vars.infile, vars.outfile);
+		trim_quotes(params);
 		execve(cmd, params, env);
 		perror("execve");
 		free(cmd);
