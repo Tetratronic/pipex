@@ -35,6 +35,6 @@ char	*abs_path(char *arg, char **env);
 void	clean2darr(char ***arr);
 void	seal(char *params);
 void	unseal(char **params);
-void	**trim_quotes(char **params);
+void	trim_quotes(char **params);
 
 #endif

@@ -10,10 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "pipex.h"
 
-void	**trim_quotes(char **params)
+void	trim_quotes(char **params)
 {
 	int		j;
 	char	*temp;
