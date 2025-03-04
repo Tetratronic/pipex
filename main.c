@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-void	send_child(t_vars vars, char **argv, char **env, int index)
+void	child_section(t_vars vars, char **argv, char **env, int index)
 {
 	if (fork() == 0)
 	{
@@ -53,7 +53,7 @@ int	main(int argc, char **argv, char **env)
 	vars.curr_out = vars.pipe[1];
 	while (++i < 2)
 	{
-		send_child(vars, argv, env, i);
+		child_section(vars, argv, env, i);
 		vars.curr_in = vars.pipe[0];
 		vars.curr_out = vars.outfile;
 	}
