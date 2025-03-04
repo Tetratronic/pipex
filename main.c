@@ -14,16 +14,17 @@
 
 void	child_section(t_vars vars, char **argv, char **env, int index)
 {
+	char	*cmd;
+	char	**params;
+
 	if (fork() == 0)
 	{
-		char	*cmd;
-		char	**params;
-	
 		cmd = abs_path(argv[2 + index], env);
 		params = ft_split(argv[2 + index], ' ');
 		if (!cmd || !params || !0[params])
 			exit (127);
-		if (dup2(vars.curr_in, STDIN_FILENO) < 0 || dup2(vars.curr_out, STDOUT_FILENO) < 0)
+		if (dup2(vars.curr_in, STDIN_FILENO) < 0
+			|| dup2(vars.curr_out, STDOUT_FILENO) < 0)
 		{
 			perror("dup2");
 			exit(1);
@@ -42,10 +43,10 @@ int	main(int argc, char **argv, char **env)
 	t_vars	vars;
 	int		i;
 	int		status;
-	
+
 	status = 0;
 	if (argc != 5)
-		return(ft_putendl_fd("Not Enough Arguments", 2), 1);
+		return (ft_putendl_fd("Not Enough Arguments", 2), 1);
 	initialize_io(argv, &vars);
 	init_pipe(vars.pipe);
 	i = -1;
@@ -58,7 +59,7 @@ int	main(int argc, char **argv, char **env)
 		vars.curr_out = vars.outfile;
 	}
 	close_fds(vars.pipe[0], vars.pipe[1], vars.infile, vars.outfile);
-	while(wait(&status) >= 0)
+	while (wait(&status) >= 0)
 		;
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));

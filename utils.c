@@ -38,12 +38,12 @@ char	*fetch_path(char *cmd, char **env)
 	char		*temp;
 
 	i = -1;
-	while(env[++i])
+	while (env[++i])
 	{
-		if(ft_strncmp(env[i], "PATH=", 5) == 0)
+		if (ft_strncmp(env[i], "PATH=", 5) == 0)
 		{
 			possible_paths = ft_split((&(*(env[i])) + 5), ':');
-			break;
+			break ;
 		}
 	}
 	i = -1;
@@ -55,7 +55,7 @@ char	*fetch_path(char *cmd, char **env)
 		if (access(fullcmd, X_OK) == 0)
 		{
 			i = 0;
-			while(possible_paths[i])
+			while (possible_paths[i])
 				free(possible_paths[i++]);
 			free(possible_paths);
 			return (fullcmd);
@@ -63,7 +63,7 @@ char	*fetch_path(char *cmd, char **env)
 		free(fullcmd);
 	}
 	i = 0;
-	while(possible_paths[i])
+	while (possible_paths[i])
 		free(possible_paths[i++]);
 	free(possible_paths);
 	return (cmd);
