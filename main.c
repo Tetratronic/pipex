@@ -20,6 +20,7 @@ void	child_section(t_vars vars, char **argv, char **env, int index)
 	if (fork() == 0)
 	{
 		cmd = abs_path(argv[2 + index], env);
+		seal(argv[2 + index]);
 		params = ft_split(argv[2 + index], ' ');
 		if (!cmd || !params || !0[params])
 			exit (127);
@@ -30,6 +31,7 @@ void	child_section(t_vars vars, char **argv, char **env, int index)
 			exit(1);
 		}
 		close_fds(vars.pipe[0], vars.pipe[1], vars.infile, vars.outfile);
+		unseal(params);
 		execve(cmd, params, env);
 		perror("execve");
 		free(cmd);

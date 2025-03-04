@@ -33,5 +33,7 @@ void	init_pipe(int *pipe);
 void	close_fds(int fd1, int fd2, int fd3, int fd4);
 char	*abs_path(char *arg, char **env);
 void	clean2darr(char ***arr);
+void	seal(char *params);
+void	unseal(char **params);
 
 #endif
