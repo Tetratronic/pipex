@@ -66,7 +66,7 @@ char	*fetch_path(char *cmd, char **env)
 	while(possible_paths[i])
 		free(possible_paths[i++]);
 	free(possible_paths);
-	return (NULL);
+	return (cmd);
 }
 
 char	*abs_path(char *arg, char **env)
@@ -87,7 +87,7 @@ char	*abs_path(char *arg, char **env)
 	cmd = NULL;
 	if (!name)
 		return (NULL);
-	if (!ft_strchr(name, '/'))
+	if (ft_strchr(name, '/') == NULL)
 	{
 		fullname = fetch_path(name, env);
 		free(name);
