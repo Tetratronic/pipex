@@ -1,0 +1,13 @@
+cleaners.c
+cleaners.o
+fdutils.c
+fdutils.o
+file2
+initialize.c
+initialize.o
+libft
+main.c
+main.o
+Makefile
+pipex
+pipex.h
