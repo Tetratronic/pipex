@@ -45,8 +45,10 @@ int	main(int argc, char **argv, char **env)
 	t_vars	vars;
 	int		i;
 	int		status;
+	int		last;
 
 	status = 0;
+	last = 0;
 	if (argc != 5)
 		return (ft_putendl_fd("Not Enough Arguments", 2), 1);
 	initialize_io(argv, &vars);
@@ -62,8 +64,7 @@ int	main(int argc, char **argv, char **env)
 	}
 	close_fds(vars.pipe[0], vars.pipe[1], vars.infile, vars.outfile);
 	while (wait(&status) >= 0)
-		;
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	return (127);
+		if (WIFEXITED(status))
+			last = WEXITSTATUS(status);
+	return (last);
 }
