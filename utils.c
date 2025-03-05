@@ -30,14 +30,13 @@ void	close_fds(int fd1, int fd2, int fd3, int fd4)
 	}
 }
 
-char	*fetch_path(char *cmd, char **env)
+static char	**get_env_path(char **env)
 {
-	static char	**possible_paths;
-	int			i;
-	char		*fullcmd;
-	char		*temp;
+	int		i;
+	char	**possible_paths;
 
 	i = -1;
+	possible_paths = NULL;
 	while (env[++i])
 	{
 		if (ft_strncmp(env[i], "PATH=", 5) == 0)
@@ -46,9 +45,20 @@ char	*fetch_path(char *cmd, char **env)
 			break ;
 		}
 	}
-	i = -1;
+	return (possible_paths);
+}
+
+char	*fetch_path(char *cmd, char **env)
+{
+	char	**possible_paths;
+	int		i;
+	char	*fullcmd;
+	char	*temp;
+
+	possible_paths = get_env_path(env);
 	if (!possible_paths)
 		return (ft_strdup(cmd));
+	i = -1;
 	while (possible_paths[++i])
 	{
 		temp = ft_strjoin(possible_paths[i], "/");
@@ -70,7 +80,7 @@ char	*abs_path(char *arg, char **env)
 	cmd = ft_split(arg, ' ');
 	if (!cmd || !*cmd)
 	{
-		if(cmd)
+		if (cmd)
 			clean2darr(&cmd);
 		return (ft_strdup(arg));
 	}

@@ -12,7 +12,18 @@
 
 #include "pipex.h"
 
-void	child_section(t_vars vars, char **argv, char **env, int index)
+static void	full_clean(char **cmd, char ***params, t_vars *vars)
+{
+	if (*cmd)
+		free(*cmd);
+	*cmd = NULL;
+	if (*params)
+		clean2darr(params);
+	*params = NULL;
+	close_fds(vars->pipe[0], vars->pipe[1], vars->infile, vars->outfile);
+}
+
+static void	child_section(t_vars *vars, char **argv, char **env, int index)
 {
 	char	*cmd;
 	char	**params;
@@ -23,26 +34,18 @@ void	child_section(t_vars vars, char **argv, char **env, int index)
 		seal(argv[2 + index]);
 		params = ft_split(argv[2 + index], ' ');
 		if (!cmd || !params || !0[params])
-		{
-			if (cmd)
-				free(cmd);
-			if (params)
-				clean2darr(&params);
-			close_fds(vars.pipe[0], vars.pipe[1], vars.infile, vars.outfile);
-			exit(1);
-		}
-		if (dup2(vars.curr_in, STDIN_FILENO) < 0
-			|| dup2(vars.curr_out, STDOUT_FILENO) < 0)
+			return (full_clean(&cmd, &params, vars), exit(1));
+		if (dup2(vars->curr_in, STDIN_FILENO) < 0
+			|| dup2(vars->curr_out, STDOUT_FILENO) < 0)
 		{
 			perror("dup2");
 			exit(1);
 		}
-		close_fds(vars.pipe[0], vars.pipe[1], vars.infile, vars.outfile);
+		close_fds(vars->pipe[0], vars->pipe[1], vars->infile, vars->outfile);
 		trim_quotes(params);
 		execve(cmd, params, env);
 		perror(cmd);
-		free(cmd);
-		clean2darr(&params);
+		full_clean(&cmd, &params, vars);
 		exit(127);
 	}
 }
@@ -65,7 +68,7 @@ int	main(int argc, char **argv, char **env)
 	vars.curr_out = vars.pipe[1];
 	while (++i < 2)
 	{
-		child_section(vars, argv, env, i);
+		child_section(&vars, argv, env, i);
 		vars.curr_in = vars.pipe[0];
 		vars.curr_out = vars.outfile;
 	}
