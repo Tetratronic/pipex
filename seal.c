@@ -50,7 +50,7 @@ void seal(char *params)
     
     while (params[i])
     {
-        if (params[i] == '\'')
+        if (params[i] == '\'' || params[i] == '\"')
             in_quotes = !in_quotes;
         if (in_quotes && params[i] == ' ')
             params[i] = '\x1F';
