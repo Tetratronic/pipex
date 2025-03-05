@@ -39,6 +39,7 @@ static void	child_section(t_vars *vars, char **argv, char **env, int index)
 			|| dup2(vars->curr_out, STDOUT_FILENO) < 0)
 		{
 			perror("dup2");
+			full_clean(&cmd, &params, vars);
 			exit(1);
 		}
 		close_fds(vars->pipe[0], vars->pipe[1], vars->infile, vars->outfile);
