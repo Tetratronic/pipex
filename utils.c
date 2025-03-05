@@ -47,6 +47,8 @@ char	*fetch_path(char *cmd, char **env)
 		}
 	}
 	i = -1;
+	if (!possible_paths)
+		return (ft_strdup(cmd));
 	while (possible_paths[++i])
 	{
 		temp = ft_strjoin(possible_paths[i], "/");
@@ -66,8 +68,12 @@ char	*abs_path(char *arg, char **env)
 	char	*fullname;
 
 	cmd = ft_split(arg, ' ');
-	if (!cmd)
-		exit(1);
+	if (!cmd || !*cmd)
+	{
+		if(cmd)
+			clean2darr(&cmd);
+		return (ft_strdup(arg));
+	}
 	trim_quotes(cmd);
 	name = cmd[0];
 	if (ft_strchr(name, '/') == NULL)

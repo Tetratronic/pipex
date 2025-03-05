@@ -24,9 +24,15 @@ void	initialize_io(char **argv, t_vars *vars)
 			ft_putstr_fd(": ", 2);
 			ft_putstr_fd(strerror(2), 2);
 			ft_putstr_fd("\n", 2);
+			if (vars->outfile > 0)
+				close(vars->outfile);
 		}
 		if (vars->outfile < 1)
+		{
+			if (vars->infile > 0)
+				close(vars->infile);
 			perror(argv[4]);
+		}
 		exit(2);
 	}
 }
