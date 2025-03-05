@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "pipex.h"
-#include <stdio.h>
 
 void	child_section(t_vars vars, char **argv, char **env, int index)
 {

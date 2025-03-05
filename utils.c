@@ -74,26 +74,21 @@ char	*abs_path(char *arg, char **env)
 	char	**cmd;
 	char	*name;
 	char	*fullname;
-	int		j;
 
 	cmd = ft_split(arg, ' ');
 	if (!cmd)
 		exit(-1);
+	trim_quotes(cmd);
 	name = ft_strdup(cmd[0]);
-	j = 0;
-	while (cmd[j])
-		free(cmd[j++]);
-	free(cmd);
-	cmd = NULL;
+	clean2darr(&cmd);
 	if (!name)
-		return (NULL);
+		return (ft_strdup(arg));
+	if (access(name, X_OK) == 0)
+		return (name);
 	if (ft_strchr(name, '/') == NULL)
 	{
 		fullname = fetch_path(name, env);
-		free(name);
 		return (fullname);
 	}
-	if (access(name, X_OK) == 0)
-		return (name);
-	return (name);
+	return (ft_strdup(arg));
 }
