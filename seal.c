@@ -12,61 +12,49 @@
 
 #include "pipex.h"
 
-void	trim_quotes(char **params)
+void unseal(char *params)
 {
-	int		j;
-	char	*temp;
-
-	while (*params)
-	{
-		if ((**params == '\'' || **params == '\"'))
-		{
-			temp = ft_strtrim(*params, "\'\"");
-			if (!temp)
-				exit(1);
-			free(*params);
-			*params = temp;
-		}
-		params++;
-	}
-	j = 0;
-	while ((*params)[j])
-	{
-		if ((*params)[j] && (*params)[j] == '\x1F')
-			(*params)[j] = ' ';
-		j++;
-	}
+    int i = 0;
+    
+    while (params[i])
+    {
+        if (params[i] == '\x1F')
+            params[i] = ' ';
+        i++;
+    }
 }
 
-void	seal(char *params)
+void trim_quotes(char **params)
 {
-	int	i;
-	
-	i = 0;
-	while (params[i] && params[i] != '\'')
-		i++;
-	if (!params[i])
-		return ;
-	while (params[i] && params[++i] != '\'')
-	{
-		if (params[i] == ' ')
-			params[i] = '\x1F';
-	}
+    char *temp;
+    
+    while (*params)
+    {
+        if (**params == '\'' || **params == '\"')
+        {
+            temp = ft_strtrim(*params, "\'\"");
+            if (!temp)
+                exit(1);
+            free(*params);
+            *params = temp;
+        }
+		unseal(*params);
+        params++;
+    }
 }
 
-void	unseal(char **params)
+void seal(char *params)
 {
-	int	j;
-
-	while (*params)
-	{
-		j = 0;
-		while ((*params)[j])
-		{
-			if ((*params)[j] && (*params)[j] == '\x1F')
-				(*params)[j] = ' ';
-			j++;
-		}
-		params++;
-	}
+    int i = 0;
+    int in_quotes = 0;
+    
+    while (params[i])
+    {
+        if (params[i] == '\'')
+            in_quotes = !in_quotes;
+        if (in_quotes && params[i] == ' ')
+            params[i] = '\x1F';
+        i++;
+    }
 }
+
