@@ -54,19 +54,13 @@ char	*fetch_path(char *cmd, char **env)
 		free(temp);
 		if (access(fullcmd, X_OK) == 0)
 		{
-			i = 0;
-			while (possible_paths[i])
-				free(possible_paths[i++]);
-			free(possible_paths);
+			clean2darr(&possible_paths);
 			return (fullcmd);
 		}
 		free(fullcmd);
 	}
-	i = 0;
-	while (possible_paths[i])
-		free(possible_paths[i++]);
-	free(possible_paths);
-	return (cmd);
+	clean2darr(&possible_paths);
+	return (ft_strdup(cmd));
 }
 
 char	*abs_path(char *arg, char **env)
@@ -77,18 +71,16 @@ char	*abs_path(char *arg, char **env)
 
 	cmd = ft_split(arg, ' ');
 	if (!cmd)
-		exit(-1);
+		exit(1);
 	trim_quotes(cmd);
-	name = ft_strdup(cmd[0]);
-	clean2darr(&cmd);
-	if (!name)
-		return (ft_strdup(arg));
-	if (access(name, X_OK) == 0)
-		return (name);
+	name = cmd[0];
 	if (ft_strchr(name, '/') == NULL)
 	{
 		fullname = fetch_path(name, env);
+		clean2darr(&cmd);
 		return (fullname);
 	}
-	return (ft_strdup(arg));
+	fullname = ft_strdup(name);
+	clean2darr(&cmd);
+	return (fullname);
 }
