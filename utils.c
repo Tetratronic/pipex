@@ -53,14 +53,10 @@ char	*fetch_path(char *cmd, char **env)
 		fullcmd = ft_strjoin(temp, cmd);
 		free(temp);
 		if (access(fullcmd, X_OK) == 0)
-		{
-			clean2darr(&possible_paths);
-			return (fullcmd);
-		}
+			return (clean2darr(&possible_paths), fullcmd);
 		free(fullcmd);
 	}
-	clean2darr(&possible_paths);
-	return (ft_strdup(cmd));
+	return (clean2darr(&possible_paths), ft_strdup(cmd));
 }
 
 char	*abs_path(char *arg, char **env)
