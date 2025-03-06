@@ -37,10 +37,11 @@ void	initialize_io(char **argv, t_vars *vars)
 	}
 }
 
-void	init_pipe(int *p)
+void	init_pipe(t_vars *vars)
 {
-	if (pipe(p) < 0)
+	if (pipe(vars->pipe) < 0)
 	{
+		close_fds(vars->outfile, vars->infile, -1, -1);
 		perror("failed to make pipe");
 		exit(EXIT_FAILURE);
 	}
