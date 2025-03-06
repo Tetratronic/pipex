@@ -24,7 +24,7 @@ static void	full_clean(char **cmd, char ***params, t_vars *vars, int mode)
 		close_fds(vars->pipe[0], vars->pipe[1], vars->infile, vars->outfile);
 }
 
-static void	redirect(char **cmd, char ***params, t_vars *vars)
+static void	redirect_io(char **cmd, char ***params, t_vars *vars)
 {
 	if (dup2(vars->curr_in, STDIN_FILENO) < 0
 		|| dup2(vars->curr_out, STDOUT_FILENO) < 0)
@@ -44,12 +44,12 @@ static void	exec_process(t_vars *vars, char **argv, char **env, int index)
 	pid = fork();
 	if (pid == 0)
 	{
-		cmd = abs_path(argv[2 + index], env);
+		cmd = find_cmd(argv[2 + index], env);
 		seal(argv[2 + index]);
 		params = ft_split(argv[2 + index], ' ');
 		if (!cmd || !params || !0[params])
 			return (full_clean(&cmd, &params, vars, 1), exit(127));
-		redirect(&cmd, &params, vars);
+		redirect_io(&cmd, &params, vars);
 		close_fds(vars->pipe[0], vars->pipe[1], vars->infile, vars->outfile);
 		trim_quotes(params);
 		execve(cmd, params, env);

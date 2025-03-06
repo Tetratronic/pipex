@@ -31,7 +31,7 @@ typedef struct s_vars {
 void	initialize_io(char **argv, t_vars *vars);
 void	init_pipe(t_vars *vars);
 void	close_fds(int fd1, int fd2, int fd3, int fd4);
-char	*abs_path(char *arg, char **env);
+char	*find_cmd(char *arg, char **env);
 void	clean2darr(char ***arr);
 void	seal(char *params);
 void	unseal(char *params);
