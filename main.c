@@ -70,7 +70,7 @@ static void	exec_process(t_vars *vars, char **argv, char **env, int index)
 		exit(127);
 	}
 	else if (pid == -1)
-		return (full_clean(&cmd, &params, vars), exit(1));
+		return (perror("fork"), close_fds(vars), exit(1));
 }
 
 int	main(int argc, char **argv, char **env)
