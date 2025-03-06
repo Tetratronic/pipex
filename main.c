@@ -40,7 +40,7 @@ static void	exec_process(t_vars *vars, char **argv, char **env, int index)
 	char	*cmd;
 	char	**params;
 	pid_t	pid;
-	
+
 	pid = fork();
 	if (pid == 0)
 	{
