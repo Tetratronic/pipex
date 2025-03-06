@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-static void	full_clean(char **cmd, char ***params, t_vars *vars, int mode)
+static void	full_clean(char **cmd, char ***params, t_vars *vars)
 {
 	if (*cmd)
 		free(*cmd);
@@ -20,8 +20,7 @@ static void	full_clean(char **cmd, char ***params, t_vars *vars, int mode)
 	if (*params)
 		clean2darr(params);
 	*params = NULL;
-	if (mode)
-		close_fds(vars);
+	close_fds(vars);
 }
 
 static void	redirect_io(char **cmd, char ***params, t_vars *vars)
@@ -30,9 +29,22 @@ static void	redirect_io(char **cmd, char ***params, t_vars *vars)
 		|| dup2(vars->curr_out, STDOUT_FILENO) < 0)
 	{
 		perror("dup2");
-		full_clean(cmd, params, vars, 1);
+		full_clean(cmd, params, vars);
 		exit(1);
 	}
+}
+
+static int	last_status(void)
+{
+	int	status;
+	int	last;
+
+	status = 0;
+	last = 0;
+	while (wait(&status) >= 0)
+		if (WIFEXITED(status))
+			last = WEXITSTATUS(status);
+	return (last);
 }
 
 static void	exec_process(t_vars *vars, char **argv, char **env, int index)
@@ -48,28 +60,24 @@ static void	exec_process(t_vars *vars, char **argv, char **env, int index)
 		seal(argv[2 + index]);
 		params = ft_split(argv[2 + index], ' ');
 		if (!cmd || !params || !0[params])
-			return (full_clean(&cmd, &params, vars, 1), exit(127));
+			return (full_clean(&cmd, &params, vars), exit(127));
 		redirect_io(&cmd, &params, vars);
 		close_fds(vars);
 		trim_quotes(params);
 		execve(cmd, params, env);
 		perror(cmd);
-		full_clean(&cmd, &params, vars, 0);
+		full_clean(&cmd, &params, vars);
 		exit(127);
 	}
 	else if (pid == -1)
-		return (full_clean(&cmd, &params, vars, 1), exit(1));
+		return (full_clean(&cmd, &params, vars), exit(1));
 }
 
 int	main(int argc, char **argv, char **env)
 {
 	t_vars	vars;
 	int		i;
-	int		status;
-	int		last;
 
-	status = 0;
-	last = 0;
 	if (argc != 5)
 		return (ft_putendl_fd("Not Enough Arguments", 2), 1);
 	initialize_io(argv, &vars);
@@ -84,8 +92,5 @@ int	main(int argc, char **argv, char **env)
 		vars.curr_out = vars.outfile;
 	}
 	close_fds(&vars);
-	while (wait(&status) >= 0)
-		if (WIFEXITED(status))
-			last = WEXITSTATUS(status);
-	return (last);
+	return (last_status());
 }
