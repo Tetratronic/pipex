@@ -12,14 +12,13 @@
 
 #ifndef PIPEX_H
 # define PIPEX_H
-# include <stdio.h>
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <unistd.h>
 # include "libft/libft.h"
 # include <fcntl.h>
 # include <string.h>
-# define malloc(x) NULL
+
 typedef struct s_vars {
 	int	pipe[2];
 	int	curr_in;
