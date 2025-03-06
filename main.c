@@ -57,7 +57,7 @@ static void	exec_process(t_vars *vars, char **argv, char **env, int index)
 	if (pid == 0)
 	{
 		cmd = find_cmd(argv[2 + index], env);
-		seal(argv[2 + index]);
+		hide_spaces(argv[2 + index]);
 		params = ft_split(argv[2 + index], ' ');
 		if (!cmd || !params || !0[params])
 			return (full_clean(&cmd, &params, vars), exit(127));

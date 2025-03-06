@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-void	unseal(char *params)
+void	expose_spaces(char *params)
 {
 	int	i;
 
@@ -39,12 +39,12 @@ void	trim_quotes(char **params)
 			free(*params);
 			*params = temp;
 		}
-		unseal(*params);
+		expose_spaces(*params);
 		params++;
 	}
 }
 
-void	seal(char *params)
+void	hide_spaces(char *params)
 {
 	int	i;
 	int	in_quotes;

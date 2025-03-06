@@ -33,8 +33,8 @@ void	init_pipe(t_vars *vars);
 void	close_fds(t_vars *vars);
 char	*find_cmd(char *arg, char **env);
 void	clean2darr(char ***arr);
-void	seal(char *params);
-void	unseal(char *params);
+void	hide_spaces(char *params);
+void	expose_spaces(char *params);
 void	trim_quotes(char **params);
 
 #endif
