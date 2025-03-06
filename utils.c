@@ -68,6 +68,7 @@ char	*compose_path(char *cmd, char **env)
 		if (access(fullcmd, X_OK) == 0)
 			return (clean2darr(&possible_paths), fullcmd);
 		free(fullcmd);
+		fullcmd = NULL;
 	}
 	clean2darr(&possible_paths); 
 	return (ft_strdup(cmd));
