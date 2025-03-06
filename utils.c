@@ -69,7 +69,8 @@ char	*compose_path(char *cmd, char **env)
 			return (clean2darr(&possible_paths), fullcmd);
 		free(fullcmd);
 	}
-	return (clean2darr(&possible_paths), ft_strdup(cmd));
+	clean2darr(&possible_paths); 
+	return (ft_strdup(cmd));
 }
 
 char	*find_cmd(char *arg, char **env)
