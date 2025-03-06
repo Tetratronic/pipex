@@ -70,7 +70,7 @@ char	*compose_path(char *cmd, char **env)
 		free(fullcmd);
 		fullcmd = NULL;
 	}
-	clean2darr(&possible_paths); 
+	clean2darr(&possible_paths);
 	return (ft_strdup(cmd));
 }
 
