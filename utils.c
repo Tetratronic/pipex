@@ -88,12 +88,9 @@ char	*find_cmd(char *arg, char **env)
 	trim_quotes(cmd);
 	name = cmd[0];
 	if (ft_strchr(name, '/') == NULL)
-	{
 		fullpath = compose_path(name, env);
-		clean2darr(&cmd);
-		return (fullpath);
-	}
-	fullpath = ft_strdup(name);
+	else
+		fullpath = ft_strdup(name);
 	clean2darr(&cmd);
 	return (fullpath);
 }
