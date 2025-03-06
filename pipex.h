@@ -19,7 +19,7 @@
 # include "libft/libft.h"
 # include <fcntl.h>
 # include <string.h>
-
+# define malloc(x) NULL
 typedef struct s_vars {
 	int	pipe[2];
 	int	curr_in;
