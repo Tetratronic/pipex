@@ -21,7 +21,7 @@ static void	full_clean(char **cmd, char ***params, t_vars *vars, int mode)
 		clean2darr(params);
 	*params = NULL;
 	if (mode)
-		close_fds(vars->pipe[0], vars->pipe[1], vars->infile, vars->outfile);
+		close_fds(vars);
 }
 
 static void	redirect_io(char **cmd, char ***params, t_vars *vars)
@@ -50,7 +50,7 @@ static void	exec_process(t_vars *vars, char **argv, char **env, int index)
 		if (!cmd || !params || !0[params])
 			return (full_clean(&cmd, &params, vars, 1), exit(127));
 		redirect_io(&cmd, &params, vars);
-		close_fds(vars->pipe[0], vars->pipe[1], vars->infile, vars->outfile);
+		close_fds(vars);
 		trim_quotes(params);
 		execve(cmd, params, env);
 		perror(cmd);
@@ -83,7 +83,7 @@ int	main(int argc, char **argv, char **env)
 		vars.curr_in = vars.pipe[0];
 		vars.curr_out = vars.outfile;
 	}
-	close_fds(vars.pipe[0], vars.pipe[1], vars.infile, vars.outfile);
+	close_fds(&vars);
 	while (wait(&status) >= 0)
 		if (WIFEXITED(status))
 			last = WEXITSTATUS(status);

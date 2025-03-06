@@ -41,8 +41,8 @@ void	init_pipe(t_vars *vars)
 {
 	if (pipe(vars->pipe) < 0)
 	{
-		close_fds(vars->outfile, vars->infile, -1, -1);
-		perror("failed to make pipe");
+		close_fds(vars);
+		perror("pipe");
 		exit(EXIT_FAILURE);
 	}
 }

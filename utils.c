@@ -12,19 +12,19 @@
 
 #include "pipex.h"
 
-void	close_fds(int fd1, int fd2, int fd3, int fd4)
+void	close_fds(t_vars *vars)
 {
 	int	fd[4];
 	int	i;
 
-	fd[0] = fd1;
-	fd[1] = fd2;
-	fd[2] = fd3;
-	fd[3] = fd4;
+	fd[0] = vars->pipe[0];
+	fd[1] = vars->pipe[1];
+	fd[2] = vars->infile;
+	fd[3] = vars->outfile;
 	i = 0;
 	while (i < 4)
 	{
-		if (fd[i] != -1)
+		if (fd[i] >= 0)
 			close(fd[i]);
 		i++;
 	}
@@ -64,6 +64,7 @@ char	*compose_path(char *cmd, char **env)
 		temp = ft_strjoin(possible_paths[i], "/");
 		fullcmd = ft_strjoin(temp, cmd);
 		free(temp);
+		temp = NULL;
 		if (access(fullcmd, X_OK) == 0)
 			return (clean2darr(&possible_paths), fullcmd);
 		free(fullcmd);
