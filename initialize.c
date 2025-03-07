@@ -12,10 +12,10 @@
 
 #include "pipex.h"
 
-void	initialize_io(char **argv, t_vars *vars)
+void	initialize_io(char **argv, t_vars *vars, int argc)
 {
 	vars->infile = open(argv[1], O_RDONLY);
-	vars->outfile = open(argv[4], O_RDWR | O_CREAT | O_TRUNC, 0644);
+	vars->outfile = open(argv[argc - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (vars->infile < 0 || vars->outfile < 0)
 	{
 		if (vars->infile < 1)
@@ -31,18 +31,38 @@ void	initialize_io(char **argv, t_vars *vars)
 		{
 			if (vars->infile > 0)
 				close(vars->infile);
-			perror(argv[4]);
+			perror(argv[argc - 1]);
 		}
 		exit(2);
 	}
 }
 
-void	init_pipe(t_vars *vars)
+void	init_pipes(t_vars *vars, int argc)
 {
-	if (pipe(vars->pipe) < 0)
+	int	pipefd[2];
+	int	i;
+	int	cmds;
+
+	cmds = (argc - 3) * 2;
+	vars->pipes = (int *)malloc(cmds * sizeof(int));
+	if (!vars->pipes)
+		exit(1);
+	ft_memset(vars->pipes, -1, cmds * sizeof(int));
+	i = 1;
+	vars->pipes[0] = vars->infile;
+	vars->pipes[cmds - 1] = vars->outfile;
+	while (i <= cmds / 2)
 	{
-		close_fds(vars);
-		perror("pipe");
-		exit(EXIT_FAILURE);
+		if (pipe(pipefd) < 0)
+		{
+			close_fds(vars);
+			free(vars->pipes);
+			vars->pipes = NULL;
+			perror("pipe");
+			exit(EXIT_FAILURE);
+		}
+		vars->pipes[i] = pipefd[1];
+		vars->pipes[i + 1] = pipefd[0];
+		i += 2;
 	}
 }

@@ -14,20 +14,17 @@
 
 void	close_fds(t_vars *vars)
 {
-	int	fd[4];
-	int	i;
+	size_t	i;
 
-	fd[0] = vars->pipe[0];
-	fd[1] = vars->pipe[1];
-	fd[2] = vars->infile;
-	fd[3] = vars->outfile;
 	i = 0;
-	while (i < 4)
+	while (vars->pipes[i] != vars->outfile)
 	{
-		if (fd[i] >= 0)
-			close(fd[i]);
+		if (vars->pipes[i] >= 0)
+			close(vars->pipes[i]);
 		i++;
 	}
+	if (vars->pipes[i] >= 0)
+			close(vars->pipes[i]);
 }
 
 static char	**available_paths(char **env)

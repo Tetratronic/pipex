@@ -56,6 +56,8 @@ static void	exec_process(t_vars *vars, char **argv, char **env, int index)
 		execve(cmd, params, env);
 		perror(cmd);
 		full_clean(&cmd, &params, vars);
+		free(vars->pipes);
+		vars->pipes = NULL;
 		exit(127);
 	}
 	else if (pid == -1)
@@ -66,20 +68,24 @@ int	main(int argc, char **argv, char **env)
 {
 	t_vars	vars;
 	int		i;
+	int		k;
 
-	if (argc != 5)
+	if (argc < 5)
 		return (ft_putendl_fd("Invalid arguments !", 2), 1);
-	initialize_io(argv, &vars);
-	init_pipe(&vars);
-	i = -1;
-	vars.curr_in = vars.infile;
-	vars.curr_out = vars.pipe[1];
-	while (++i < 2)
+	initialize_io(argv, &vars, argc);
+	init_pipes(&vars, argc);
+	i = 0;
+	k = 0;
+	while (i < argc - 3)
 	{
+		vars.curr_in = vars.pipes[k];
+		vars.curr_out = vars.pipes[k + 1];
 		exec_process(&vars, argv, env, i);
-		vars.curr_in = vars.pipe[0];
-		vars.curr_out = vars.outfile;
+		k += 2;
+		i++;
 	}
 	close_fds(&vars);
+	free(vars.pipes);
+	vars.pipes = NULL;
 	return (last_status());
 }

@@ -21,15 +21,15 @@
 # include <string.h>
 
 typedef struct s_vars {
-	int	pipe[2];
+	int	*pipes;
 	int	curr_in;
 	int	curr_out;
 	int	infile;
 	int	outfile;
 }			t_vars;
 
-void	initialize_io(char **argv, t_vars *vars);
-void	init_pipe(t_vars *vars);
+void	initialize_io(char **argv, t_vars *vars, int argc);
+void	init_pipes(t_vars *vars, int argc);
 void	close_fds(t_vars *vars);
 char	*find_cmd(char *arg, char **env);
 void	clean2darr(char ***arr);
