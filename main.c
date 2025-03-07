@@ -23,20 +23,22 @@ static void	redirect_io(char **cmd, char ***params, t_vars *vars)
 	}
 }
 
-static int	last_status(void)
+static int	last_status(pid_t lastpid)
 {
-	int	status;
-	int	last;
+	int		status;
+	int		exitcode;
 
 	status = 0;
-	last = 0;
-	while (wait(&status) >= 0)
+	exitcode = 0;
+	while (waitpid(lastpid, &status, 0) >= 0)
+	{
 		if (WIFEXITED(status))
-			last = WEXITSTATUS(status);
-	return (last);
+			exitcode = WEXITSTATUS(status);
+	}
+	return ((int)exitcode);
 }
 
-static void	exec_process(t_vars *vars, char **argv, char **env, int index)
+static pid_t	exec_process(t_vars *vars, char **argv, char **env, int index)
 {
 	char	*cmd;
 	char	**params;
@@ -49,10 +51,10 @@ static void	exec_process(t_vars *vars, char **argv, char **env, int index)
 		hide_spaces(argv[2 + index]);
 		params = ft_split(argv[2 + index], ' ');
 		if (!cmd || !params || !0[params])
-			return (full_clean(&cmd, &params, vars), exit(127));
+			return (full_clean(&cmd, &params, vars), free(vars->pipes), pid);
 		redirect_io(&cmd, &params, vars);
-		close_fds(vars);
 		trim_quotes(params);
+		close_fds(vars);
 		execve(cmd, params, env);
 		perror(cmd);
 		full_clean(&cmd, &params, vars);
@@ -61,7 +63,8 @@ static void	exec_process(t_vars *vars, char **argv, char **env, int index)
 		exit(127);
 	}
 	else if (pid == -1)
-		return (perror("fork"), close_fds(vars), exit(1));
+		return (close_fds(vars), free(vars->pipes), exit(1), pid);
+	return (pid);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -69,6 +72,7 @@ int	main(int argc, char **argv, char **env)
 	t_vars	vars;
 	int		i;
 	int		k;
+	pid_t	last;
 
 	if (argc < 5)
 		return (ft_putendl_fd("Invalid arguments !", 2), 1);
@@ -80,12 +84,12 @@ int	main(int argc, char **argv, char **env)
 	{
 		vars.curr_in = vars.pipes[k];
 		vars.curr_out = vars.pipes[k + 1];
-		exec_process(&vars, argv, env, i);
+		last = exec_process(&vars, argv, env, i);
 		k += 2;
 		i++;
 	}
 	close_fds(&vars);
 	free(vars.pipes);
 	vars.pipes = NULL;
-	return (last_status());
+	return (last_status(last));
 }

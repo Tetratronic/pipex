@@ -37,6 +37,15 @@ void	initialize_io(char **argv, t_vars *vars, int argc)
 	}
 }
 
+static void	pipeerror(t_vars *vars)
+{
+	close_fds(vars);
+	free(vars->pipes);
+	vars->pipes = NULL;
+	perror("pipe");
+	exit(EXIT_FAILURE);
+}
+
 void	init_pipes(t_vars *vars, int argc)
 {
 	int	pipefd[2];
@@ -54,13 +63,7 @@ void	init_pipes(t_vars *vars, int argc)
 	while (i < cmds - 1)
 	{
 		if (pipe(pipefd) < 0)
-		{
-			close_fds(vars);
-			free(vars->pipes);
-			vars->pipes = NULL;
-			perror("pipe");
-			exit(EXIT_FAILURE);
-		}
+			pipeerror(vars);
 		vars->pipes[i] = pipefd[1];
 		vars->pipes[i + 1] = pipefd[0];
 		i += 2;
