@@ -38,6 +38,13 @@ static int	last_status(pid_t lastpid)
 	return ((int)exitcode);
 }
 
+static void	prepare_execution(char **cmd, char ***params, t_vars *vars)
+{
+	redirect_io(cmd, params, vars);
+	trim_quotes(*params);
+	close_fds(vars);
+}
+
 static pid_t	exec_process(t_vars *vars, char **argv, char **env, int index)
 {
 	char	*cmd;
@@ -51,10 +58,9 @@ static pid_t	exec_process(t_vars *vars, char **argv, char **env, int index)
 		hide_spaces(argv[2 + index]);
 		params = ft_split(argv[2 + index], ' ');
 		if (!cmd || !params || !0[params])
-			return (full_clean(&cmd, &params, vars), free(vars->pipes), pid);
-		redirect_io(&cmd, &params, vars);
-		trim_quotes(params);
-		close_fds(vars);
+			return (full_clean(&cmd, &params, vars),
+				free(vars->pipes), exit(127), -1);
+		prepare_execution(&cmd, &params, vars);
 		execve(cmd, params, env);
 		perror(cmd);
 		full_clean(&cmd, &params, vars);
