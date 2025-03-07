@@ -57,8 +57,8 @@ static pid_t	exec_process(t_vars *vars, char **argv, char **env, int index)
 		cmd = find_cmd(argv[2 + index], env);
 		hide_spaces(argv[2 + index]);
 		params = ft_split(argv[2 + index], ' ');
-		if (!cmd || !params || !0[params])
-			return (full_clean(&cmd, &params, vars),
+		if (!cmd || !params)
+			return (perror("malloc"), full_clean(&cmd, &params, vars),
 				free(vars->pipes), exit(127), -1);
 		prepare_execution(&cmd, &params, vars);
 		execve(cmd, params, env);
