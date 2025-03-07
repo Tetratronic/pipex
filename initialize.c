@@ -15,7 +15,7 @@
 void	initialize_io(char **argv, t_vars *vars, int argc)
 {
 	vars->infile = open(argv[1], O_RDONLY);
-	vars->outfile = open(argv[argc - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
+	vars->outfile = open(argv[argc - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (vars->infile < 0 || vars->outfile < 0)
 	{
 		if (vars->infile < 1)
@@ -51,7 +51,7 @@ void	init_pipes(t_vars *vars, int argc)
 	vars->pipes[0] = vars->infile;
 	vars->pipes[cmds - 1] = vars->outfile;
 	i = 1;
-	while (i <= cmds / 2)
+	while (i < cmds - 1)
 	{
 		if (pipe(pipefd) < 0)
 		{
