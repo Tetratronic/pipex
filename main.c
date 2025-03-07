@@ -68,7 +68,7 @@ int	main(int argc, char **argv, char **env)
 	int		i;
 
 	if (argc != 5)
-		return (ft_putendl_fd("Not Enough Arguments", 2), 1);
+		return (ft_putendl_fd("Invalid arguments !", 2), 1);
 	initialize_io(argv, &vars);
 	init_pipe(&vars);
 	i = -1;
