@@ -12,17 +12,6 @@
 
 #include "pipex.h"
 
-static void	full_clean(char **cmd, char ***params, t_vars *vars)
-{
-	if (*cmd)
-		free(*cmd);
-	*cmd = NULL;
-	if (*params)
-		clean2darr(params);
-	*params = NULL;
-	close_fds(vars);
-}
-
 static void	redirect_io(char **cmd, char ***params, t_vars *vars)
 {
 	if (dup2(vars->curr_in, STDIN_FILENO) < 0

@@ -22,3 +22,14 @@ void	clean2darr(char ***arr)
 	free(*arr);
 	*arr = NULL;
 }
+
+void	full_clean(char **cmd, char ***params, t_vars *vars)
+{
+	if (*cmd)
+		free(*cmd);
+	*cmd = NULL;
+	if (*params)
+		clean2darr(params);
+	*params = NULL;
+	close_fds(vars);
+}

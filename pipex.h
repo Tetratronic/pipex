@@ -36,5 +36,6 @@ void	clean2darr(char ***arr);
 void	hide_spaces(char *params);
 void	expose_spaces(char *params);
 void	trim_quotes(char **params);
+void	full_clean(char **cmd, char ***params, t_vars *vars);
 
 #endif
