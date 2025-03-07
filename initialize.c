@@ -48,9 +48,9 @@ void	init_pipes(t_vars *vars, int argc)
 	if (!vars->pipes)
 		exit(1);
 	ft_memset(vars->pipes, -1, cmds * sizeof(int));
-	i = 1;
 	vars->pipes[0] = vars->infile;
 	vars->pipes[cmds - 1] = vars->outfile;
+	i = 1;
 	while (i <= cmds / 2)
 	{
 		if (pipe(pipefd) < 0)

@@ -24,7 +24,7 @@ void	close_fds(t_vars *vars)
 		i++;
 	}
 	if (vars->pipes[i] >= 0)
-			close(vars->pipes[i]);
+		close(vars->pipes[i]);
 }
 
 static char	**available_paths(char **env)
