@@ -80,7 +80,7 @@ int	main(int argc, char **argv, char **env)
 	int		k;
 	pid_t	last;
 
-	if (argc < 5)
+	if (argc != 5)
 		return (ft_putendl_fd("Invalid arguments !", 2), 1);
 	initialize_io(argv, &vars, argc);
 	init_pipes(&vars, argc);

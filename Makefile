@@ -1,6 +1,9 @@
 NAME = pipex
+BONUS = pipex_bonus
 SRCS = main.c initialize.c utils.c cleaners.c quotes_handler.c
+BONUS_SRCS = bonus/main_bonus.c initialize.c utils.c cleaners.c quotes_handler.c
 OBJS = $(SRCS:%.c=%.o)
+BONUS_OBJS = $(BONUS_SRCS:%.c=%.o)
 LIBFTDIR = ./libft
 LIBFT = $(LIBFTDIR)/libft.a
 CC = cc
@@ -18,14 +21,18 @@ $(NAME): $(LIBFT) $(OBJS) $(HEADERS)
 $(LIBFT):
 	make -C $(LIBFTDIR)
 
-bonus: all
+
+$(BONUS): $(LIBFT) $(BONUS_OBJS) $(HEADERS)
+	$(CC) $(BONUS_OBJS) $(CFLAGS) -Llibft -lft -o $(BONUS)
+
+bonus: $(BONUS)
 
 clean:
 	make clean -C libft/
-	rm -f $(OBJS)
+	rm -f $(OBJS) $(BONUS_OBJS)
 
 fclean: clean
 	make fclean -C libft/
-	rm -f $(NAME)
+	rm -f $(NAME) $(BONUS)
 
-re: fclean all bonus
+re: clean fclean all bonus
