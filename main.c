@@ -18,7 +18,7 @@ static void	redirect_io(char **cmd, char ***params, t_vars *vars)
 		|| dup2(vars->curr_out, STDOUT_FILENO) < 0)
 	{
 		perror("dup2");
-		full_clean(cmd, params, vars);
+		full_clean(cmd, params, vars, 1);
 		exit(1);
 	}
 }
@@ -30,11 +30,11 @@ static int	last_status(pid_t lastpid)
 
 	status = 0;
 	exitcode = 0;
-	while (waitpid(lastpid, &status, 0) >= 0)
-	{
-		if (WIFEXITED(status))
-			exitcode = WEXITSTATUS(status);
-	}
+	waitpid(lastpid, &status, 0);
+	if (WIFEXITED(status))
+		exitcode = WEXITSTATUS(status);
+	while (wait(NULL) > 0)
+		;
 	return ((int)exitcode);
 }
 
@@ -58,12 +58,12 @@ static pid_t	exec_process(t_vars *vars, char **argv, char **env, int index)
 		hide_spaces(argv[2 + index]);
 		params = ft_split(argv[2 + index], ' ');
 		if (!cmd || !params)
-			return (perror("malloc"), full_clean(&cmd, &params, vars),
+			return (perror("malloc"), full_clean(&cmd, &params, vars, 1),
 				free(vars->pipes), exit(127), -1);
 		prepare_execution(&cmd, &params, vars);
 		execve(cmd, params, env);
 		perror(cmd);
-		full_clean(&cmd, &params, vars);
+		full_clean(&cmd, &params, vars, 0);
 		free(vars->pipes);
 		vars->pipes = NULL;
 		exit(127);

@@ -1,21 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   initialize.c                                       :+:      :+:    :+:   */
+/*   heredoc_io.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abenkaro <abenkaro@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 17:38:35 by abenkaro          #+#    #+#             */
-/*   Updated: 2025/02/26 18:21:46 by abenkaro         ###   ########.fr       */
+/*   Updated: 2025/03/08 20:22:56 by abenkaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
-void	initialize_io(char **argv, t_vars *vars, int argc)
+static void	get_input(char *delim, t_vars *vars)
 {
-	vars->infile = open(argv[1], O_RDONLY);
-	vars->outfile = open(argv[argc - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
+	char	*line;
+	size_t	delim_len;
+	char	*del;
+
+	del = ft_strjoin(delim, "\n");
+	if (!del)
+		return ;
+	delim_len = ft_strlen(del);
+	while (1)
+	{
+		ft_putstr_fd("pipe heredoc> ", 1);
+		line = get_next_line(0, 0);
+		if (!line || ft_strncmp(line, del, delim_len) == 0)
+		{
+			get_next_line(0, 1);
+			free(line);
+			break ;
+		}
+		ft_putstr_fd(line, vars->infile);
+		free(line);
+	}
+	close(vars->infile);
+	vars->infile = open(".heredoc", O_RDONLY, 0644);
+	free(del);
+}
+
+void	heredoc_io(char **argv, t_vars *vars, int argc)
+{
+	vars->infile = open(".heredoc", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	vars->outfile = open(argv[argc - 1], O_CREAT | O_RDWR | O_APPEND, 0644);
 	if (vars->infile < 0 || vars->outfile < 0)
 	{
 		if (vars->infile < 1)
@@ -35,37 +63,5 @@ void	initialize_io(char **argv, t_vars *vars, int argc)
 		}
 		exit(2);
 	}
-}
-
-static void	pipe_error(t_vars *vars)
-{
-	close_fds(vars);
-	free(vars->pipes);
-	vars->pipes = NULL;
-	perror("pipe");
-	exit(EXIT_FAILURE);
-}
-
-void	init_pipes(t_vars *vars, int argc)
-{
-	int	pipefd[2];
-	int	i;
-	int	cmds;
-
-	cmds = (argc - 3) * 2;
-	vars->pipes = (int *)malloc(cmds * sizeof(int));
-	if (!vars->pipes)
-		exit(1);
-	ft_memset(vars->pipes, -1, cmds * sizeof(int));
-	vars->pipes[0] = vars->infile;
-	vars->pipes[cmds - 1] = vars->outfile;
-	i = 1;
-	while (i < cmds - 1)
-	{
-		if (pipe(pipefd) < 0)
-			pipe_error(vars);
-		vars->pipes[i] = pipefd[1];
-		vars->pipes[i + 1] = pipefd[0];
-		i += 2;
-	}
+	get_input(argv[2], vars);
 }

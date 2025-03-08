@@ -18,7 +18,7 @@ static void	redirect_io(char **cmd, char ***params, t_vars *vars)
 		|| dup2(vars->curr_out, STDOUT_FILENO) < 0)
 	{
 		perror("dup2");
-		full_clean(cmd, params, vars);
+		full_clean(cmd, params, vars, 1);
 		exit(1);
 	}
 }
@@ -30,11 +30,11 @@ static int	last_status(pid_t lastpid)
 
 	status = 0;
 	exitcode = 0;
-	while (waitpid(lastpid, &status, 0) >= 0)
-	{
-		if (WIFEXITED(status))
-			exitcode = WEXITSTATUS(status);
-	}
+	waitpid(lastpid, &status, 0);
+	if (WIFEXITED(status))
+		exitcode = WEXITSTATUS(status);
+	while (wait(NULL) > 0)
+		;
 	return ((int)exitcode);
 }
 
@@ -58,12 +58,12 @@ static pid_t	exec_process(t_vars *vars, char **argv, char **env, int index)
 		hide_spaces(argv[2 + index]);
 		params = ft_split(argv[2 + index], ' ');
 		if (!cmd || !params)
-			return (perror("malloc"), full_clean(&cmd, &params, vars),
+			return (perror("malloc"), full_clean(&cmd, &params, vars, 1),
 				free(vars->pipes), exit(127), -1);
 		prepare_execution(&cmd, &params, vars);
 		execve(cmd, params, env);
 		perror(cmd);
-		full_clean(&cmd, &params, vars);
+		full_clean(&cmd, &params, vars, 0);
 		free(vars->pipes);
 		vars->pipes = NULL;
 		exit(127);
@@ -77,25 +77,27 @@ int	main(int argc, char **argv, char **env)
 {
 	t_vars	vars;
 	int		i;
-	int		k;
 	pid_t	last;
 
 	if (argc < 5)
 		return (ft_putendl_fd("Invalid arguments !", 2), 1);
-	initialize_io(argv, &vars, argc);
+	if (!ft_strncmp("here_doc", argv[1], 8))
+		heredoc_io(argv++, &vars, argc--);
+	else
+		initialize_io(argv, &vars, argc);
 	init_pipes(&vars, argc);
 	i = 0;
-	k = 0;
 	while (i < argc - 3)
 	{
-		vars.curr_in = vars.pipes[k];
-		vars.curr_out = vars.pipes[k + 1];
+		vars.curr_in = vars.pipes[i * 2];
+		vars.curr_out = vars.pipes[i * 2 + 1];
 		last = exec_process(&vars, argv, env, i);
-		k += 2;
 		i++;
 	}
 	close_fds(&vars);
 	free(vars.pipes);
 	vars.pipes = NULL;
+	if (access(".heredoc", F_OK) == 0)
+		unlink(".heredoc");
 	return (last_status(last));
 }

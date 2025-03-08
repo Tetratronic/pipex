@@ -35,7 +35,7 @@ void	trim_quotes(char **params)
 		{
 			temp = ft_strtrim(*params, "\'\"");
 			if (!temp)
-				exit(1);
+				return (expose_spaces(*params));
 			free(*params);
 			*params = temp;
 		}

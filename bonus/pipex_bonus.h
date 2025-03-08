@@ -13,5 +13,8 @@
 #ifndef PIPEX_BONUS_H
 # define PIPEX_BONUS_H
 # include "../pipex.h"
+# include "gnl_bonus/get_next_line.h"
+
+void	heredoc_io(char **argv, t_vars *vars, int argc);
 
 #endif

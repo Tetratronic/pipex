@@ -23,7 +23,7 @@ void	clean2darr(char ***arr)
 	*arr = NULL;
 }
 
-void	full_clean(char **cmd, char ***params, t_vars *vars)
+void	full_clean(char **cmd, char ***params, t_vars *vars, int mode)
 {
 	if (*cmd)
 		free(*cmd);
@@ -31,5 +31,6 @@ void	full_clean(char **cmd, char ***params, t_vars *vars)
 	if (*params)
 		clean2darr(params);
 	*params = NULL;
-	close_fds(vars);
+	if (mode)
+		close_fds(vars);
 }

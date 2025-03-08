@@ -1,15 +1,15 @@
 NAME = pipex
 BONUS = pipex_bonus
-SRCS = main.c initialize.c utils.c cleaners.c quotes_handler.c
-BONUS_SRCS = bonus/main_bonus.c initialize.c utils.c cleaners.c quotes_handler.c
+SRCS = main.c initialize.c utils.c memory_mgmt.c quotes_handler.c
+BONUS_SRCS = bonus/main_bonus.c bonus/heredoc_io.c bonus/gnl_bonus/get_next_line.c bonus/gnl_bonus/get_next_line_utils.c initialize.c utils.c memory_mgmt.c quotes_handler.c
 OBJS = $(SRCS:%.c=%.o)
 BONUS_OBJS = $(BONUS_SRCS:%.c=%.o)
 LIBFTDIR = ./libft
 LIBFT = $(LIBFTDIR)/libft.a
 CC = cc
 HEADERS = pipex.h libft/libft.h
-BONUS_HEADERS = pipex.h bonus/pipex_bonus.h libft/libft.h
-CFLAGS = -Wall -Wextra -Werror 
+BONUS_HEADERS = pipex.h bonus/pipex_bonus.h bonus/gnl_bonus/get_next_line.h libft/libft.h
+CFLAGS = -Wall -Wextra -Werror -g 
 
 all: $(NAME)
 
