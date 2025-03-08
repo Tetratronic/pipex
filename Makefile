@@ -7,13 +7,17 @@ BONUS_OBJS = $(BONUS_SRCS:%.c=%.o)
 LIBFTDIR = ./libft
 LIBFT = $(LIBFTDIR)/libft.a
 CC = cc
-HEADERS = pipex.h
-CFLAGS = -Wall -Wextra -Werror -g 
+HEADERS = pipex.h libft/libft.h
+BONUS_HEADERS = pipex.h bonus/pipex_bonus.h libft/libft.h
+CFLAGS = -Wall -Wextra -Werror 
 
 all: $(NAME)
 
 %.o: %.c $(HEADERS)
 	$(CC) $(CFLAGS)  -I. -c $< -o $@
+
+bonus/%.o: bonus/%.c $(BONUS_HEADERS)
+	$(CC) $(CFLAGS) -I. -Ibonus -c $< -o $@
 
 $(NAME): $(LIBFT) $(OBJS) $(HEADERS)
 	$(CC) $(OBJS) $(CFLAGS) -Llibft -lft -o $(NAME)
@@ -22,7 +26,7 @@ $(LIBFT):
 	make -C $(LIBFTDIR)
 
 
-$(BONUS): $(LIBFT) $(BONUS_OBJS) $(HEADERS)
+$(BONUS): $(LIBFT) $(BONUS_OBJS) $(BONUS_HEADERS)
 	$(CC) $(BONUS_OBJS) $(CFLAGS) -Llibft -lft -o $(BONUS)
 
 bonus: $(BONUS)
