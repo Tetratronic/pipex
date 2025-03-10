@@ -6,11 +6,11 @@
 /*   By: abenkaro <abenkaro@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 00:51:05 by abenkaro          #+#    #+#             */
-/*   Updated: 2025/03/09 22:50:53 by abenkaro         ###   ########.fr       */
+/*   Updated: 2025/03/10 04:02:57 by abenkaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "utils_bonus.h"
 
 void	expose_spaces(char *params)
 {

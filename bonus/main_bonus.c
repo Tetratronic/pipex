@@ -19,7 +19,7 @@ static void	redirect_io(char **cmd, char ***params, t_vars *vars)
 	{
 		full_clean(cmd, params, vars, 1);
 		free(vars->pipes);
-		free(vars->hd_name);
+		free_hd(&vars->hd_name);
 		exit(1);
 	}
 }
@@ -60,7 +60,7 @@ static pid_t	exec_process(t_vars *vars, char **argv, char **env, int index)
 		params = ft_split(argv[2 + index], ' ');
 		if (!cmd || !params)
 			return (perror("malloc"), full_clean(&cmd, &params, vars, 1),
-				free(vars->pipes), free(vars->hd_name), exit(127), -1);
+				free(vars->pipes), free_hd(&vars->hd_name), exit(127), -1);
 		prepare_execution(&cmd, &params, vars);
 		execve(cmd, params, env);
 		perror(cmd);
@@ -98,8 +98,8 @@ int	main(int argc, char **argv, char **env)
 	close_fds(&vars);
 	free(vars.pipes);
 	vars.pipes = NULL;
-	if (access(vars.hd_name, F_OK) == 0)
+	if (vars.hd_name && access(vars.hd_name, F_OK) == 0)
 		unlink(vars.hd_name);
-	free(vars.hd_name);
+	free_hd(&vars.hd_name);
 	return (last_status(last));
 }

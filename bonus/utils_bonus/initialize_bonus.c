@@ -1,21 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   initialize.c                                       :+:      :+:    :+:   */
+/*   initialize_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abenkaro <abenkaro@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 17:38:35 by abenkaro          #+#    #+#             */
-/*   Updated: 2025/02/26 18:21:46 by abenkaro         ###   ########.fr       */
+/*   Updated: 2025/03/10 04:02:28 by abenkaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "utils_bonus.h"
 
 void	initialize_io(char **argv, t_vars *vars, int argc)
 {
 	vars->infile = open(argv[1], O_RDONLY);
 	vars->outfile = open(argv[argc - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
+	vars->hd_name = NULL;
 	if (vars->infile < 0 || vars->outfile < 0)
 	{
 		if (vars->infile < 1)

@@ -6,7 +6,7 @@
 /*   By: abenkaro <abenkaro@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 16:54:48 by abenkaro          #+#    #+#             */
-/*   Updated: 2025/03/09 22:51:15 by abenkaro         ###   ########.fr       */
+/*   Updated: 2025/03/10 04:03:15 by abenkaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,6 @@ void	hide_spaces(char *params);
 void	expose_spaces(char *params);
 void	trim_quotes(char **params);
 void	full_clean(char **cmd, char ***params, t_vars *vars, int mode);
+void	free_hd(char **hd);
 
 #endif

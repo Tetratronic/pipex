@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "utils.h"
 
 void	initialize_io(char **argv, t_vars *vars, int argc)
 {

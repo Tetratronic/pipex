@@ -6,11 +6,21 @@
 /*   By: abenkaro <abenkaro@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 00:48:08 by abenkaro          #+#    #+#             */
-/*   Updated: 2025/03/09 22:50:49 by abenkaro         ###   ########.fr       */
+/*   Updated: 2025/03/10 04:02:41 by abenkaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "utils_bonus.h"
+
+void	free_hd(char **hd)
+{
+	if (*hd)
+	{
+		free(*hd);
+		*hd = NULL;
+	}
+	hd = NULL;
+}
 
 void	clean2darr(char ***arr)
 {
