@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   seal.c                                             :+:      :+:    :+:   */
+/*   quotes_handler_bonus.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abenkaro <abenkaro@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 00:51:05 by abenkaro          #+#    #+#             */
-/*   Updated: 2025/03/05 00:51:08 by abenkaro         ###   ########.fr       */
+/*   Updated: 2025/03/09 22:50:53 by abenkaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	trim_quotes(char **params)
 		{
 			temp = ft_strtrim(*params, "\'\"");
 			if (!temp)
-				exit(1);
+				return (expose_spaces(*params));
 			free(*params);
 			*params = temp;
 		}

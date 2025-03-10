@@ -1,20 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_bonus.h                                      :+:      :+:    :+:   */
+/*   memory_mgmt_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abenkaro <abenkaro@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/26 16:54:48 by abenkaro          #+#    #+#             */
-/*   Updated: 2025/03/08 00:15:02 by abenkaro         ###   ########.fr       */
+/*   Created: 2025/03/04 00:48:08 by abenkaro          #+#    #+#             */
+/*   Updated: 2025/03/09 22:50:49 by abenkaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_BONUS_H
-# define PIPEX_BONUS_H
-# include "utils_bonus/utils_bonus.h"
-# include "gnl_bonus/get_next_line.h"
+#include "pipex.h"
 
-void	heredoc_io(char **argv, t_vars *vars, int argc);
+void	clean2darr(char ***arr)
+{
+	int	i;
 
-#endif
+	i = 0;
+	while ((*arr)[i])
+		free((*arr)[i++]);
+	free(*arr);
+	*arr = NULL;
+}
+
+void	full_clean(char **cmd, char ***params, t_vars *vars, int mode)
+{
+	if (*cmd)
+		free(*cmd);
+	*cmd = NULL;
+	if (*params)
+		clean2darr(params);
+	*params = NULL;
+	if (mode)
+		close_fds(vars);
+}
