@@ -7,7 +7,7 @@ vim.o.expandtab = false -- Pressing the TAB key will insert spaces instead of a 
 vim.o.softtabstop = 4 -- Number of spaces inserted instead of a TAB character
 vim.o.shiftwidth = 4 -- Number of spaces inserted when indenting
 -- vim.cmd([[set list listchars=nbsp:¬,tab:»·,trail:·,extends:>]])
-vim.cmd([[
+vim.cmd [[
 filetype off
 filetype plugin indent on
 set smartindent
@@ -24,6 +24,6 @@ set incsearch
 set hlsearch
 au BufWrite /private/tmp/crontab.* set nowritebackup
 au BufWrite /private/etc/pw.* set nowritebackup
-]])
+]]
 local opt = vim.opt
 opt.list = false
